@@ -23,12 +23,14 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        body,
-        html {
+        html,
+        body {
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
+            width: 100% !important;
+            height: 100% !important;
+            /* פתרון לבעיות גובה בבוסרים של ניידים (iOS/Android) */
+            height: -webkit-fill-available;
             font-family: 'Assistant', sans-serif;
             background: #050505;
             overflow: hidden;
@@ -36,12 +38,12 @@
             align-items: center;
             justify-content: center;
             color: white;
-            /* מונע מתיחה וגלילה על טלפונים */
             position: fixed;
+            left: 0;
+            top: 0;
             touch-action: none;
         }
 
-        /* רקע דינמי יוקרתי */
         .bg-gradient {
             position: fixed;
             top: 0;
@@ -82,10 +84,9 @@
             pointer-events: none;
         }
 
-        /* סימניות מודרניות - אופטימיזציה לנייד */
         .bookmarks {
             position: fixed;
-            bottom: 30px;
+            bottom: calc(env(safe-area-inset-bottom) + 30px);
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -114,7 +115,6 @@
             box-shadow: 0 0 15px var(--primary);
         }
 
-        /* קונטיינר שלבים - מותאם למסך טלפון */
         .viewport {
             width: 100%;
             height: 100%;
@@ -122,13 +122,14 @@
             align-items: center;
             justify-content: center;
             perspective: 2000px;
-            padding: 20px;
+            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
         }
 
         .stage {
             position: absolute;
-            width: calc(100% - 40px);
-            max-width: 420px;
+            /* הפכנו את הרוחב לגמיש יותר כדי למנוע את ה"מריחה" בגיטהב */
+            width: 90%;
+            max-width: 450px;
             background: var(--glass);
             backdrop-filter: blur(35px);
             -webkit-backdrop-filter: blur(35px);
@@ -174,14 +175,13 @@
         }
 
         p {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             line-height: 1.5;
             font-weight: 300;
             color: rgba(255, 255, 255, 0.9);
             margin-top: 10px;
         }
 
-        /* רכיבים ויזואליים - מותאם לנייד */
         .heart-orb {
             position: relative;
             width: 140px;
@@ -215,7 +215,6 @@
             filter: drop-shadow(0 0 15px white);
         }
 
-        /* כרטיסיות פיצ'רים - מותאם לנייד */
         .feature-box {
             width: 100%;
             background: rgba(255, 255, 255, 0.06);
@@ -247,7 +246,6 @@
             display: block;
         }
 
-        /* מתנה יוקרתית */
         .luxury-gift {
             font-size: 90px;
             cursor: pointer;
@@ -260,7 +258,6 @@
             transform: scale(0.9) rotate(-5deg);
         }
 
-        /* לוגיקת נשיקה - מילוי מסך מלא */
         .the-kiss {
             position: fixed;
             top: 0;
@@ -297,7 +294,6 @@
             }
         }
 
-        /* פס טעינה - מותאם לנייד */
         .timer-track {
             position: absolute;
             top: 0;
@@ -316,23 +312,24 @@
             box-shadow: 0 0 10px var(--primary);
         }
 
-        /* הסתרת אלמנטים מיותרים בטלפון */
-        @media (max-height: 600px) {
+        @media screen and (orientation: landscape) and (max-height: 500px) {
+            .stage {
+                transform: scale(0.7) !important;
+                padding: 20px;
+            }
+
             h1 {
-                font-size: 2.8rem;
+                font-size: 2.5rem;
             }
 
             .heart-orb {
-                width: 100px;
-                height: 100px;
+                width: 80px;
+                height: 80px;
+                margin: 10px 0;
             }
 
             .heart-icon {
-                font-size: 45px;
-            }
-
-            .stage {
-                padding: 30px 20px;
+                font-size: 40px;
             }
         }
     </style>
@@ -345,7 +342,6 @@
     </div>
     <div id="particles-container"></div>
 
-    <!-- ניווט סימניות מודרני -->
     <div class="bookmarks">
         <div class="bookmark" id="b-1" onclick="jumpTo(1)"></div>
         <div class="bookmark" id="b-2" onclick="jumpTo(2)"></div>
@@ -354,8 +350,6 @@
     </div>
 
     <div class="viewport">
-
-        <!-- שלב 1: שמות -->
         <div class="stage" id="s-1">
             <div class="timer-track">
                 <div class="timer-fill" id="f-1"></div>
@@ -368,7 +362,6 @@
             <p>שני עולמות שנפגשו<br>והפכו לאחד מופלא.</p>
         </div>
 
-        <!-- שלב 2: השקה -->
         <div class="stage" id="s-2">
             <div class="timer-track">
                 <div class="timer-fill" id="f-2"></div>
@@ -395,7 +388,6 @@
             </style>
         </div>
 
-        <!-- שלב 3: פיצ'רים -->
         <div class="stage" id="s-3">
             <div class="timer-track">
                 <div class="timer-fill" id="f-3"></div>
@@ -428,7 +420,6 @@
             </div>
         </div>
 
-        <!-- שלב 4: מתנה -->
         <div class="stage" id="s-4">
             <div class="timer-track">
                 <div class="timer-fill" id="f-4"></div>
@@ -438,10 +429,8 @@
             <p>לחצי כדי לגלות מה מחכה לך</p>
             <div class="luxury-gift" onclick="blastKiss()">🎁</div>
         </div>
-
     </div>
 
-    <!-- אפקט נשיקה -->
     <div class="the-kiss" id="kissBox">
         <div class="kiss-big">💋</div>
     </div>
@@ -457,8 +446,9 @@
             startAuto();
             createParticles();
 
-            // מניעת גלילה בטלפון
+            // מניעת גלילה כפולה ובעיות מתיחה בגיטהב
             document.body.addEventListener('touchmove', function (e) {
+                if (e.target.closest('.stage')) return; // אפשר גלילה פנימית אם יש תוכן רב
                 e.preventDefault();
             }, { passive: false });
         }
@@ -484,12 +474,9 @@
 
             timerInt = setInterval(() => {
                 let p = ((Date.now() - start) / duration) * 100;
-                if (p <= 100) {
-                    if (fill) fill.style.width = p + '%';
-                } else {
-                    clearInterval(timerInt);
-                }
-            }, 60).unref?.[60] || null; // Avoid unref error if not in node
+                if (p <= 100) { if (fill) fill.style.width = p + '%'; }
+                else { clearInterval(timerInt); }
+            }, 60);
         }
 
         function startAuto() {
@@ -509,17 +496,9 @@
         function blastKiss() {
             const box = document.getElementById('kissBox');
             box.style.display = 'flex';
-
-            // הפעלת רטט בטלפון אם נתמך
             if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-
-            for (let i = 0; i < 35; i++) {
-                setTimeout(createExplodingHeart, i * 25);
-            }
-
-            setTimeout(() => {
-                box.style.display = 'none';
-            }, 1500);
+            for (let i = 0; i < 35; i++) { setTimeout(createExplodingHeart, i * 25); }
+            setTimeout(() => { box.style.display = 'none'; }, 1500);
         }
 
         function createExplodingHeart() {
@@ -530,20 +509,15 @@
             h.style.fontSize = Math.random() * 35 + 20 + 'px';
             h.style.zIndex = '1100';
             h.style.pointerEvents = 'none';
-
             const deg = Math.random() * 360;
             const dist = Math.random() * 350 + 100;
             const x = Math.cos(deg * Math.PI / 180) * dist;
             const y = Math.sin(deg * Math.PI / 180) * dist;
-
             document.body.appendChild(h);
-
             h.animate([
                 { transform: 'translate(-50%, -50%) scale(0) rotate(0deg)', opacity: 1 },
                 { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(1.4) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-            ], {
-                duration: 1000, easing: 'ease-out'
-            }).onfinish = () => h.remove();
+            ], { duration: 1000, easing: 'ease-out' }).onfinish = () => h.remove();
         }
 
         function createParticles() {
@@ -558,15 +532,11 @@
                 p.innerHTML = Math.random() > 0.8 ? '✨' : '💖';
                 p.style.pointerEvents = 'none';
                 container.appendChild(p);
-
                 p.animate([
                     { transform: 'translateY(0) rotate(0deg)', opacity: p.style.opacity },
                     { transform: `translateY(-110vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-                ], {
-                    duration: Math.random() * 4000 + 8000,
-                    easing: 'linear'
-                }).onfinish = () => p.remove();
-            }, 1000); // Frequency reduced for mobile performance
+                ], { duration: Math.random() * 4000 + 8000, easing: 'linear' }).onfinish = () => p.remove();
+            }, 1000);
         }
 
         init();
