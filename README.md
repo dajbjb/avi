@@ -15,37 +15,42 @@
             --rose-gold: #ffb3c1;
             --glass: rgba(255, 255, 255, 0.12);
             --glass-border: rgba(255, 255, 255, 0.25);
-            --shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        /* הגדרות בסיס למניעת עיוותים */
         html,
         body {
             margin: 0;
             padding: 0;
-            width: 100% !important;
-            height: 100% !important;
-            /* פתרון לבעיות גובה בבוסרים של ניידים (iOS/Android) */
-            height: -webkit-fill-available;
-            font-family: 'Assistant', sans-serif;
+            width: 100vw;
+            height: 100vh;
+            height: calc(var(--vh, 1vh) * 100);
+            /* תיקון לגובה בניידים */
             background: #050505;
             overflow: hidden;
+            font-family: 'Assistant', sans-serif;
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+        }
+
+        /* רקע דינמי */
+        .main-wrapper {
             position: fixed;
-            left: 0;
             top: 0;
-            touch-action: none;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
         }
 
         .bg-gradient {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
@@ -56,9 +61,9 @@
 
         .bg-glow {
             position: absolute;
-            width: 150vw;
-            height: 150vw;
-            background: radial-gradient(circle, rgba(255, 77, 109, 0.12) 0%, transparent 70%);
+            width: 100vmax;
+            height: 100vmax;
+            background: radial-gradient(circle, rgba(255, 77, 109, 0.1) 0%, transparent 70%);
             border-radius: 50%;
             filter: blur(80px);
             animation: moveGlow 25s infinite alternate ease-in-out;
@@ -66,16 +71,16 @@
 
         @keyframes moveGlow {
             0% {
-                transform: translate(-30%, -30%);
+                transform: translate(-20%, -20%);
             }
 
             100% {
-                transform: translate(10%, 10%);
+                transform: translate(20%, 20%);
             }
         }
 
         #particles-container {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
@@ -84,25 +89,25 @@
             pointer-events: none;
         }
 
+        /* ניווט סימניות - עבר לצד למראה מודרני יותר ב-Desktop ונגיש ב-Mobile */
         .bookmarks {
             position: fixed;
-            bottom: calc(env(safe-area-inset-bottom) + 30px);
+            bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 12px;
+            gap: 15px;
             z-index: 100;
             background: rgba(255, 255, 255, 0.08);
-            padding: 12px 20px;
+            padding: 12px 25px;
             border-radius: 50px;
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
         }
 
         .bookmark {
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             transition: 0.5s all cubic-bezier(0.2, 0.8, 0.2, 1.2);
@@ -110,37 +115,39 @@
         }
 
         .bookmark.active {
-            width: 35px;
+            width: 45px;
             background: var(--primary);
             box-shadow: 0 0 15px var(--primary);
         }
 
-        .viewport {
+        /* קונטיינר שלבים - עכשיו הוא רספונסיבי באמת */
+        .stage-viewport {
             width: 100%;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             perspective: 2000px;
-            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
+            padding: 20px;
+            z-index: 10;
         }
 
         .stage {
             position: absolute;
-            /* הפכנו את הרוחב לגמיש יותר כדי למנוע את ה"מריחה" בגיטהב */
             width: 90%;
-            max-width: 450px;
+            max-width: 500px;
+            /* מוגדר ל-500 כדי שלא יהיה צר מדי ב-PC */
             background: var(--glass);
-            backdrop-filter: blur(35px);
-            -webkit-backdrop-filter: blur(35px);
-            border-radius: 35px;
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-radius: 40px;
             border: 1px solid var(--glass-border);
-            padding: 40px 25px;
+            padding: 50px 30px;
             text-align: center;
             opacity: 0;
             visibility: hidden;
-            transform: scale(0.85) translateY(40px) rotateX(-15deg);
-            transition: 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform: scale(0.9) translateY(40px) rotateX(-10deg);
+            transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
             box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
@@ -154,46 +161,71 @@
             transform: scale(1) translateY(0) rotateX(0);
         }
 
+        /* כשיש מסך רחב (PC) ניתן לכרטיסייה מרחב גדול יותר */
+        @media (min-width: 768px) {
+            .stage {
+                max-width: 650px;
+                padding: 60px 50px;
+            }
+
+            h1 {
+                font-size: 4.5rem !important;
+            }
+
+            p {
+                font-size: 1.4rem !important;
+            }
+
+            .heart-orb {
+                width: 180px !important;
+                height: 180px !important;
+            }
+
+            .heart-icon {
+                font-size: 85px !important;
+            }
+        }
+
         h1 {
             font-family: 'Amatic SC', cursive;
-            font-size: 3.5rem;
-            margin: 5px 0;
+            font-size: 3.8rem;
+            margin: 10px 0;
             background: linear-gradient(to bottom, #fff, var(--rose-gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            line-height: 1.1;
+            line-height: 1;
         }
 
         .subtitle {
-            font-size: 0.85rem;
-            letter-spacing: 2px;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
             text-transform: uppercase;
             color: var(--rose-gold);
             font-weight: 400;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             opacity: 0.8;
         }
 
         p {
-            font-size: 1.15rem;
-            line-height: 1.5;
+            font-size: 1.2rem;
+            line-height: 1.6;
             font-weight: 300;
             color: rgba(255, 255, 255, 0.9);
-            margin-top: 10px;
+            margin: 15px 0;
         }
 
         .heart-orb {
             position: relative;
-            width: 140px;
-            height: 140px;
+            width: 150px;
+            height: 150px;
             background: radial-gradient(circle at 30% 30%, rgba(255, 77, 109, 0.8), transparent);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 50px rgba(255, 77, 109, 0.25);
+            box-shadow: 0 0 50px rgba(255, 77, 109, 0.3);
             animation: pulseOrb 4s infinite ease-in-out;
-            margin: 20px 0;
+            margin: 25px 0;
         }
 
         @keyframes pulseOrb {
@@ -205,57 +237,51 @@
             }
 
             50% {
-                transform: scale(1.05);
-                box-shadow: 0 0 60px rgba(255, 77, 109, 0.4);
+                transform: scale(1.08);
+                box-shadow: 0 0 70px rgba(255, 77, 109, 0.5);
             }
         }
 
         .heart-icon {
-            font-size: 65px;
+            font-size: 75px;
             filter: drop-shadow(0 0 15px white);
         }
 
         .feature-box {
             width: 100%;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 18px;
-            padding: 15px;
-            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
             text-align: right;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.3s transform;
+        }
+
+        .feature-box:hover {
+            transform: translateX(-10px);
+            background: rgba(255, 255, 255, 0.12);
         }
 
         .feature-icon {
-            font-size: 1.6rem;
-            min-width: 40px;
+            font-size: 1.8rem;
+            min-width: 45px;
             text-align: center;
         }
 
-        .feature-box div b {
-            display: block;
-            font-size: 0.95rem;
-            margin-bottom: 2px;
-        }
-
-        .feature-box div span {
-            font-size: 0.8rem;
-            opacity: 0.6;
-            display: block;
-        }
-
         .luxury-gift {
-            font-size: 90px;
+            font-size: 100px;
             cursor: pointer;
             position: relative;
-            margin-top: 15px;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.4, 1.4);
+            margin-top: 20px;
+            transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        .luxury-gift:active {
-            transform: scale(0.9) rotate(-5deg);
+        .luxury-gift:hover {
+            transform: scale(1.1) rotate(10deg);
         }
 
         .the-kiss {
@@ -273,23 +299,23 @@
         }
 
         .kiss-big {
-            font-size: 200px;
-            animation: kissImpact 1.5s forwards ease-out;
+            font-size: 250px;
+            animation: kissImpact 1.5s forwards;
         }
 
         @keyframes kissImpact {
             0% {
-                transform: scale(0) rotate(-45deg);
+                transform: scale(0);
                 opacity: 0;
             }
 
-            30% {
-                transform: scale(1.3) rotate(0);
+            40% {
+                transform: scale(1.2);
                 opacity: 1;
             }
 
             100% {
-                transform: scale(6);
+                transform: scale(10);
                 opacity: 0;
             }
         }
@@ -299,135 +325,120 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 3px;
+            height: 5px;
             background: rgba(255, 255, 255, 0.05);
             overflow: hidden;
-            border-radius: 35px 35px 0 0;
+            border-radius: 40px 40px 0 0;
         }
 
         .timer-fill {
             height: 100%;
             width: 0%;
             background: var(--primary);
-            box-shadow: 0 0 10px var(--primary);
-        }
-
-        @media screen and (orientation: landscape) and (max-height: 500px) {
-            .stage {
-                transform: scale(0.7) !important;
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            .heart-orb {
-                width: 80px;
-                height: 80px;
-                margin: 10px 0;
-            }
-
-            .heart-icon {
-                font-size: 40px;
-            }
+            box-shadow: 0 0 15px var(--primary);
         }
     </style>
 </head>
 
 <body>
 
-    <div class="bg-gradient">
-        <div class="bg-glow"></div>
-    </div>
-    <div id="particles-container"></div>
-
-    <div class="bookmarks">
-        <div class="bookmark" id="b-1" onclick="jumpTo(1)"></div>
-        <div class="bookmark" id="b-2" onclick="jumpTo(2)"></div>
-        <div class="bookmark" id="b-3" onclick="jumpTo(3)"></div>
-        <div class="bookmark" id="b-4" onclick="jumpTo(4)"></div>
-    </div>
-
-    <div class="viewport">
-        <div class="stage" id="s-1">
-            <div class="timer-track">
-                <div class="timer-fill" id="f-1"></div>
-            </div>
-            <div class="subtitle">Our Love Story</div>
-            <h1>דוד & אביה</h1>
-            <div class="heart-orb">
-                <div class="heart-icon">❤️</div>
-            </div>
-            <p>שני עולמות שנפגשו<br>והפכו לאחד מופלא.</p>
+    <div class="main-wrapper">
+        <div class="bg-gradient">
+            <div class="bg-glow"></div>
         </div>
+        <div id="particles-container"></div>
 
-        <div class="stage" id="s-2">
-            <div class="timer-track">
-                <div class="timer-fill" id="f-2"></div>
+        <div class="stage-viewport">
+            <!-- שלב 1 -->
+            <div class="stage" id="s-1">
+                <div class="timer-track">
+                    <div class="timer-fill" id="f-1"></div>
+                </div>
+                <div class="subtitle">Our Love Story</div>
+                <h1>דוד & אביה</h1>
+                <div class="heart-orb">
+                    <div class="heart-icon">❤️</div>
+                </div>
+                <p>שני עולמות שנפגשו והפכו לאחד מופלא.</p>
             </div>
-            <div class="subtitle">Coming Soon</div>
-            <h1>ממלכת האהבה</h1>
-            <p>אפליקציה שנועדה רק בשבילנו.<br>השקה בקרוב מאוד... 🥹</p>
-            <div
-                style="margin-top: 25px; width: 100%; height: 2px; background: rgba(255,255,255,0.1); position: relative;">
+
+            <!-- שלב 2 -->
+            <div class="stage" id="s-2">
+                <div class="timer-track">
+                    <div class="timer-fill" id="f-2"></div>
+                </div>
+                <div class="subtitle">Coming Soon</div>
+                <h1>ממלכת האהבה</h1>
+                <p>אפליקציה שנועדה רק בשבילנו.<br>השקה בקרוב מאוד... 🥹</p>
                 <div
-                    style="position: absolute; left: 0; top: 0; height: 100%; width: 100%; background: linear-gradient(90deg, transparent, var(--primary), transparent); animation: loadPulse 2.5s infinite linear;">
+                    style="margin-top: 30px; width: 100%; height: 2px; background: rgba(255,255,255,0.1); position: relative; overflow: hidden;">
+                    <div
+                        style="position: absolute; left: 0; top: 0; height: 100%; width: 50%; background: var(--primary); box-shadow: 0 0 15px var(--primary); animation: slideProgress 2s infinite linear;">
+                    </div>
+                </div>
+                <style>
+                    @keyframes slideProgress {
+                        from {
+                            left: -50%;
+                        }
+
+                        to {
+                            left: 100%;
+                        }
+                    }
+                </style>
+            </div>
+
+            <!-- שלב 3 -->
+            <div class="stage" id="s-3">
+                <div class="timer-track">
+                    <div class="timer-fill" id="f-3"></div>
+                </div>
+                <div class="subtitle">Inside the App</div>
+                <h1 style="font-size: 3.2rem; margin-bottom: 25px;">מה מחכה לנו?</h1>
+
+                <div class="feature-box">
+                    <div class="feature-icon">💬</div>
+                    <div>
+                        <b style="font-size: 1.1rem; display: block;">רגעים בשידור חי</b>
+                        <span style="opacity: 0.6; font-size: 0.9rem;">צ'אט פרטי ואישי רק לנו.</span>
+                    </div>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon">⏳</div>
+                    <div>
+                        <b style="font-size: 1.1rem; display: block;">ציר זמן נצחי</b>
+                        <span style="opacity: 0.6; font-size: 0.9rem;">כל הזיכרונות במקום אחד.</span>
+                    </div>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon">🎁</div>
+                    <div>
+                        <b style="font-size: 1.1rem; display: block;">הפתעות יומיות</b>
+                        <span style="opacity: 0.6; font-size: 0.9rem;">מסרים ופינוקים בכל יום.</span>
+                    </div>
                 </div>
             </div>
-            <style>
-                @keyframes loadPulse {
-                    0% {
-                        transform: translateX(-100%);
-                    }
 
-                    100% {
-                        transform: translateX(100%);
-                    }
-                }
-            </style>
+            <!-- שלב 4 -->
+            <div class="stage" id="s-4">
+                <div class="timer-track">
+                    <div class="timer-fill" id="f-4"></div>
+                </div>
+                <div class="subtitle">For You</div>
+                <h1>משהו קטן...</h1>
+                <p>לחצי כדי לגלות מה מחכה לך</p>
+                <div class="luxury-gift" onclick="blastKiss()">🎁</div>
+            </div>
         </div>
 
-        <div class="stage" id="s-3">
-            <div class="timer-track">
-                <div class="timer-fill" id="f-3"></div>
-            </div>
-            <div class="subtitle">Inside the App</div>
-            <h1 style="font-size: 2.8rem; margin-bottom: 15px;">מה מחכה לנו?</h1>
-
-            <div class="feature-box">
-                <div class="feature-icon">💬</div>
-                <div>
-                    <b>רגעים בשידור חי</b>
-                    <span>צ'אט פרטי ואישי רק לנו.</span>
-                </div>
-            </div>
-
-            <div class="feature-box">
-                <div class="feature-icon">⏳</div>
-                <div>
-                    <b>ציר זמן נצחי</b>
-                    <span>כל הזיכרונות במקום אחד.</span>
-                </div>
-            </div>
-
-            <div class="feature-box">
-                <div class="feature-icon">🎁</div>
-                <div>
-                    <b>הפתעות יומיות</b>
-                    <span>מסרים ופינוקים בכל יום.</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="stage" id="s-4">
-            <div class="timer-track">
-                <div class="timer-fill" id="f-4"></div>
-            </div>
-            <div class="subtitle">For You</div>
-            <h1>משהו קטן...</h1>
-            <p>לחצי כדי לגלות מה מחכה לך</p>
-            <div class="luxury-gift" onclick="blastKiss()">🎁</div>
+        <div class="bookmarks">
+            <div class="bookmark" id="b-1" onclick="jumpTo(1)"></div>
+            <div class="bookmark" id="b-2" onclick="jumpTo(2)"></div>
+            <div class="bookmark" id="b-3" onclick="jumpTo(3)"></div>
+            <div class="bookmark" id="b-4" onclick="jumpTo(4)"></div>
         </div>
     </div>
 
@@ -438,18 +449,25 @@
     <script>
         let current = 1;
         const total = 4;
-        const duration = 6500;
+        const duration = 7000;
         let timerInt, mainInt;
+
+        function updateVH() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+
+        window.addEventListener('resize', updateVH);
+        updateVH();
 
         function init() {
             render(1);
             startAuto();
             createParticles();
 
-            // מניעת גלילה כפולה ובעיות מתיחה בגיטהב
+            // מניעת גלילה בטלפון
             document.body.addEventListener('touchmove', function (e) {
-                if (e.target.closest('.stage')) return; // אפשר גלילה פנימית אם יש תוכן רב
-                e.preventDefault();
+                if (!e.target.closest('.stage')) e.preventDefault();
             }, { passive: false });
         }
 
@@ -497,7 +515,7 @@
             const box = document.getElementById('kissBox');
             box.style.display = 'flex';
             if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-            for (let i = 0; i < 35; i++) { setTimeout(createExplodingHeart, i * 25); }
+            for (let i = 0; i < 40; i++) { setTimeout(createExplodingHeart, i * 25); }
             setTimeout(() => { box.style.display = 'none'; }, 1500);
         }
 
@@ -506,18 +524,18 @@
             h.innerHTML = Math.random() > 0.5 ? '❤️' : '💋';
             h.style.position = 'fixed';
             h.style.left = '50%'; h.style.top = '50%';
-            h.style.fontSize = Math.random() * 35 + 20 + 'px';
+            h.style.fontSize = Math.random() * 40 + 20 + 'px';
             h.style.zIndex = '1100';
             h.style.pointerEvents = 'none';
             const deg = Math.random() * 360;
-            const dist = Math.random() * 350 + 100;
+            const dist = Math.random() * 400 + 100;
             const x = Math.cos(deg * Math.PI / 180) * dist;
             const y = Math.sin(deg * Math.PI / 180) * dist;
             document.body.appendChild(h);
             h.animate([
                 { transform: 'translate(-50%, -50%) scale(0) rotate(0deg)', opacity: 1 },
-                { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(1.4) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-            ], { duration: 1000, easing: 'ease-out' }).onfinish = () => h.remove();
+                { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(1.5) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+            ], { duration: 1200, easing: 'ease-out' }).onfinish = () => h.remove();
         }
 
         function createParticles() {
@@ -536,7 +554,7 @@
                     { transform: 'translateY(0) rotate(0deg)', opacity: p.style.opacity },
                     { transform: `translateY(-110vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
                 ], { duration: Math.random() * 4000 + 8000, easing: 'linear' }).onfinish = () => p.remove();
-            }, 1000);
+            }, 800);
         }
 
         init();
