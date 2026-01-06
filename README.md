@@ -5,559 +5,702 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ממלכת האהבה - ההשקה</title>
+    <title>David & Avia - The Kingdom</title>
+
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- Fonts -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Amatic+SC:wght@700&family=Assistant:wght@200;400;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700;900&family=Fredoka:wght@300;400;500;600;700&family=Amatic+SC:wght@700&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
+        /* --- MODERN LOVE SYSTEM --- */
         :root {
-            --primary: #ff4d6d;
-            --rose-gold: #ffb3c1;
-            --glass: rgba(255, 255, 255, 0.12);
-            --glass-border: rgba(255, 255, 255, 0.25);
-            --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            --neon-blue: #00f2ea;
+            --neon-pink: #ff0050;
+            --bg-dark: #050505;
+            --glass: rgba(20, 20, 25, 0.9);
+            --border: 1px solid rgba(255, 255, 255, 0.08);
+            --safe-bottom: env(safe-area-inset-bottom, 20px);
         }
 
-        /* הגדרות בסיס למניעת עיוותים */
-        html,
         body {
             margin: 0;
             padding: 0;
-            width: 100vw;
-            height: 100vh;
-            height: calc(var(--vh, 1vh) * 100);
-            /* תיקון לגובה בניידים */
-            background: #050505;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-dark);
+            color: #fff;
+            font-family: 'Fredoka', sans-serif;
             overflow: hidden;
-            font-family: 'Assistant', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- GRADIENT TITLE & HEARTS --- */
+        .main-title {
+            font-family: 'Amatic SC', cursive;
+            font-size: 3.5rem;
+            margin: 0 0 20px 0;
+            background: linear-gradient(to right, var(--neon-blue), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .heart-bg-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .floating-heart {
+            position: absolute;
+            bottom: -20px;
+            color: rgba(255, 0, 80, 0.1);
+            animation: floatUp linear forwards;
+            font-size: 20px;
+        }
+
+        @keyframes floatUp {
+            to {
+                transform: translateY(-120vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* --- LAYOUT --- */
+        #app-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: none;
+            /* Toggled by JS */
+        }
+
+        .view-section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 20px 20px 100px 20px;
+            overflow-y: auto;
+            display: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .view-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- WIDGETS --- */
+        .glass-card {
+            background: var(--glass);
+            border: var(--border);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Clock Pro */
+        .clock-container {
+            text-align: center;
+            margin: 20px 0 10px 0;
+        }
+
+        .clock-time {
+            font-family: 'Rubik', sans-serif;
+            font-weight: 700;
+            font-size: 4.8rem;
+            line-height: 1;
+            letter-spacing: -3px;
+            background: linear-gradient(180deg, #fff, #bbb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            /* Fallback */
         }
 
-        /* רקע דינמי */
-        .main-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .clock-seconds {
+            font-size: 2rem;
+            opacity: 0.5;
+            font-weight: 300;
+        }
+
+        .clock-date {
+            font-size: 1.1rem;
+            opacity: 0.6;
+            margin-top: 5px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Days */
+        .days-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .days-val {
+            font-family: 'Rubik', sans-serif;
+            font-weight: 900;
+            font-size: 2.5rem;
+            color: var(--neon-pink);
+        }
+
+        .days-lbl {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            letter-spacing: 2px;
+        }
+
+        /* Countdown */
+        .countdown-widget {
+            display: none;
+            background: linear-gradient(135deg, #111, #000);
+            border: 1px solid var(--neon-blue);
+        }
+
+        .cd-grid {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            text-align: center;
+            font-family: 'Rubik';
+        }
+
+        .cd-num {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .cd-lbl {
+            font-size: 0.7rem;
+            opacity: 0.5;
+            text-transform: uppercase;
+        }
+
+        /* Photo */
+        .photo-widget {
+            height: 280px;
+            width: 100%;
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            border: var(--border);
+            background: #000;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .photo-img {
             width: 100%;
             height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-actions {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1;
+            gap: 10px;
         }
 
-        .bg-gradient {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            background: radial-gradient(circle at center, #2e0814 0%, #050505 100%);
-        }
-
-        .bg-glow {
-            position: absolute;
-            width: 100vmax;
-            height: 100vmax;
-            background: radial-gradient(circle, rgba(255, 77, 109, 0.1) 0%, transparent 70%);
+        .action-btn {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            filter: blur(80px);
-            animation: moveGlow 25s infinite alternate ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 1.2rem;
         }
 
-        @keyframes moveGlow {
-            0% {
-                transform: translate(-20%, -20%);
-            }
-
-            100% {
-                transform: translate(20%, 20%);
-            }
-        }
-
-        #particles-container {
-            position: absolute;
-            top: 0;
+        /* Nav */
+        #bottom-nav {
+            position: fixed;
+            bottom: 25px;
             left: 0;
             width: 100%;
-            height: 100%;
-            z-index: -1;
+            display: none;
+            justify-content: center;
+            z-index: 5000;
             pointer-events: none;
         }
 
-        /* ניווט סימניות - עבר לצד למראה מודרני יותר ב-Desktop ונגיש ב-Mobile */
-        .bookmarks {
+        .nav-pill {
+            background: rgba(20, 20, 22, 0.95);
+            border-radius: 35px;
+            padding: 15px 30px;
+            display: flex;
+            gap: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            pointer-events: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-icon {
+            font-size: 1.4rem;
+            color: #555;
+            transition: 0.3s;
+        }
+
+        .nav-icon.active {
+            color: #fff;
+            transform: translateY(-4px);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        body.role-david .active {
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px rgba(0, 242, 234, 0.4);
+        }
+
+        body.role-avia .active {
+            color: var(--neon-pink);
+            text-shadow: 0 0 15px rgba(255, 0, 80, 0.4);
+        }
+
+        /* Login Overlay */
+        #login-overlay {
             position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.08);
-            padding: 12px 25px;
-            border-radius: 50px;
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-        }
-
-        .bookmark {
-            width: 12px;
-            height: 12px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            transition: 0.5s all cubic-bezier(0.2, 0.8, 0.2, 1.2);
-            cursor: pointer;
-        }
-
-        .bookmark.active {
-            width: 45px;
-            background: var(--primary);
-            box-shadow: 0 0 15px var(--primary);
-        }
-
-        /* קונטיינר שלבים - עכשיו הוא רספונסיבי באמת */
-        .stage-viewport {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            perspective: 2000px;
-            padding: 20px;
-            z-index: 10;
-        }
-
-        .stage {
-            position: absolute;
-            width: 90%;
-            max-width: 500px;
-            /* מוגדר ל-500 כדי שלא יהיה צר מדי ב-PC */
-            background: var(--glass);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border-radius: 40px;
-            border: 1px solid var(--glass-border);
-            padding: 50px 30px;
-            text-align: center;
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(0.9) translateY(40px) rotateX(-10deg);
-            transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-            box-shadow: var(--shadow);
+            inset: 0;
+            background: #050505;
+            z-index: 99999;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
 
-        .stage.active {
-            opacity: 1;
-            visibility: visible;
-            transform: scale(1) translateY(0) rotateX(0);
+        .role-avatar {
+            font-size: 4.5rem;
+            margin: 0 15px;
+            transition: 0.3s;
         }
 
-        /* כשיש מסך רחב (PC) ניתן לכרטיסייה מרחב גדול יותר */
-        @media (min-width: 768px) {
-            .stage {
-                max-width: 650px;
-                padding: 60px 50px;
-            }
-
-            h1 {
-                font-size: 4.5rem !important;
-            }
-
-            p {
-                font-size: 1.4rem !important;
-            }
-
-            .heart-orb {
-                width: 180px !important;
-                height: 180px !important;
-            }
-
-            .heart-icon {
-                font-size: 85px !important;
-            }
+        .role-avatar:active {
+            transform: scale(0.9);
         }
 
-        h1 {
-            font-family: 'Amatic SC', cursive;
-            font-size: 3.8rem;
-            margin: 10px 0;
-            background: linear-gradient(to bottom, #fff, var(--rose-gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1;
-        }
-
-        .subtitle {
-            font-size: 0.9rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--rose-gold);
-            font-weight: 400;
-            margin-bottom: 20px;
-            opacity: 0.8;
-        }
-
-        p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            font-weight: 300;
-            color: rgba(255, 255, 255, 0.9);
-            margin: 15px 0;
-        }
-
-        .heart-orb {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle at 30% 30%, rgba(255, 77, 109, 0.8), transparent);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 50px rgba(255, 77, 109, 0.3);
-            animation: pulseOrb 4s infinite ease-in-out;
-            margin: 25px 0;
-        }
-
-        @keyframes pulseOrb {
-
-            0%,
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 30px rgba(255, 77, 109, 0.2);
+        /* Mobile */
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 3rem;
             }
 
-            50% {
-                transform: scale(1.08);
-                box-shadow: 0 0 70px rgba(255, 77, 109, 0.5);
+            .clock-time {
+                font-size: 3.8rem;
+            }
+
+            .nav-pill {
+                padding: 12px 25px;
+                gap: 25px;
+            }
+
+            #bottom-nav {
+                bottom: calc(15px + var(--safe-bottom));
             }
         }
 
-        .heart-icon {
-            font-size: 75px;
-            filter: drop-shadow(0 0 15px white);
-        }
-
-        .feature-box {
+        /* Standard Components */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-pink), #ff4785);
+            color: #fff;
+            border: 0;
+            padding: 15px;
+            border-radius: 16px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 18px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            text-align: right;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: 0.3s transform;
+            font-weight: 600;
+            font-family: 'Rubik';
+            font-size: 1rem;
+            margin-top: 10px;
         }
 
-        .feature-box:hover {
-            transform: translateX(-10px);
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        .feature-icon {
-            font-size: 1.8rem;
-            min-width: 45px;
-            text-align: center;
-        }
-
-        .luxury-gift {
-            font-size: 100px;
-            cursor: pointer;
-            position: relative;
-            margin-top: 20px;
-            transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        .luxury-gift:hover {
-            transform: scale(1.1) rotate(10deg);
-        }
-
-        .the-kiss {
-            position: fixed;
-            top: 0;
-            left: 0;
+        input {
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-        }
-
-        .kiss-big {
-            font-size: 250px;
-            animation: kissImpact 1.5s forwards;
-        }
-
-        @keyframes kissImpact {
-            0% {
-                transform: scale(0);
-                opacity: 0;
-            }
-
-            40% {
-                transform: scale(1.2);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(10);
-                opacity: 0;
-            }
-        }
-
-        .timer-track {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.05);
-            overflow: hidden;
-            border-radius: 40px 40px 0 0;
-        }
-
-        .timer-fill {
-            height: 100%;
-            width: 0%;
-            background: var(--primary);
-            box-shadow: 0 0 15px var(--primary);
+            padding: 15px;
+            background: #222;
+            border: 0;
+            color: #fff;
+            border-radius: 12px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="main-wrapper">
-        <div class="bg-gradient">
-            <div class="bg-glow"></div>
+    <!-- HEARTS EFFECT -->
+    <div id="hearts-container" class="heart-bg-container"></div>
+
+    <!-- LOGIN -->
+    <div id="login-overlay">
+        <div class="main-title">David & Avia</div>
+        <div style="font-size: 0.9rem; opacity: 0.5; margin-top: -10px; margin-bottom: 40px; letter-spacing: 3px;">THE
+            KINGDOM</div>
+
+        <div style="display:flex;">
+            <div class="role-avatar" onclick="preLogin('david')">👑</div>
+            <div class="role-avatar" onclick="preLogin('avia')">💖</div>
         </div>
-        <div id="particles-container"></div>
-
-        <div class="stage-viewport">
-            <!-- שלב 1 -->
-            <div class="stage" id="s-1">
-                <div class="timer-track">
-                    <div class="timer-fill" id="f-1"></div>
-                </div>
-                <div class="subtitle">Our Love Story</div>
-                <h1>דוד & אביה</h1>
-                <div class="heart-orb">
-                    <div class="heart-icon">❤️</div>
-                </div>
-                <p>שני עולמות שנפגשו והפכו לאחד מופלא.</p>
-            </div>
-
-            <!-- שלב 2 -->
-            <div class="stage" id="s-2">
-                <div class="timer-track">
-                    <div class="timer-fill" id="f-2"></div>
-                </div>
-                <div class="subtitle">Coming Soon</div>
-                <h1>ממלכת האהבה</h1>
-                <p>אפליקציה שנועדה רק בשבילנו.<br>השקה בקרוב מאוד... 🥹</p>
-                <div
-                    style="margin-top: 30px; width: 100%; height: 2px; background: rgba(255,255,255,0.1); position: relative; overflow: hidden;">
-                    <div
-                        style="position: absolute; left: 0; top: 0; height: 100%; width: 50%; background: var(--primary); box-shadow: 0 0 15px var(--primary); animation: slideProgress 2s infinite linear;">
-                    </div>
-                </div>
-                <style>
-                    @keyframes slideProgress {
-                        from {
-                            left: -50%;
-                        }
-
-                        to {
-                            left: 100%;
-                        }
-                    }
-                </style>
-            </div>
-
-            <!-- שלב 3 -->
-            <div class="stage" id="s-3">
-                <div class="timer-track">
-                    <div class="timer-fill" id="f-3"></div>
-                </div>
-                <div class="subtitle">Inside the App</div>
-                <h1 style="font-size: 3.2rem; margin-bottom: 25px;">מה מחכה לנו?</h1>
-
-                <div class="feature-box">
-                    <div class="feature-icon">💬</div>
-                    <div>
-                        <b style="font-size: 1.1rem; display: block;">רגעים בשידור חי</b>
-                        <span style="opacity: 0.6; font-size: 0.9rem;">צ'אט פרטי ואישי רק לנו.</span>
-                    </div>
-                </div>
-
-                <div class="feature-box">
-                    <div class="feature-icon">⏳</div>
-                    <div>
-                        <b style="font-size: 1.1rem; display: block;">ציר זמן נצחי</b>
-                        <span style="opacity: 0.6; font-size: 0.9rem;">כל הזיכרונות במקום אחד.</span>
-                    </div>
-                </div>
-
-                <div class="feature-box">
-                    <div class="feature-icon">🎁</div>
-                    <div>
-                        <b style="font-size: 1.1rem; display: block;">הפתעות יומיות</b>
-                        <span style="opacity: 0.6; font-size: 0.9rem;">מסרים ופינוקים בכל יום.</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- שלב 4 -->
-            <div class="stage" id="s-4">
-                <div class="timer-track">
-                    <div class="timer-fill" id="f-4"></div>
-                </div>
-                <div class="subtitle">For You</div>
-                <h1>משהו קטן...</h1>
-                <p>לחצי כדי לגלות מה מחכה לך</p>
-                <div class="luxury-gift" onclick="blastKiss()">🎁</div>
-            </div>
-        </div>
-
-        <div class="bookmarks">
-            <div class="bookmark" id="b-1" onclick="jumpTo(1)"></div>
-            <div class="bookmark" id="b-2" onclick="jumpTo(2)"></div>
-            <div class="bookmark" id="b-3" onclick="jumpTo(3)"></div>
-            <div class="bookmark" id="b-4" onclick="jumpTo(4)"></div>
-        </div>
+        <input type="number" id="pin" placeholder="ACCESS CODE"
+            style="display:none; text-align:center; width:150px; margin-top:40px; letter-spacing:5px;">
     </div>
 
-    <div class="the-kiss" id="kissBox">
-        <div class="kiss-big">💋</div>
+    <!-- APP -->
+    <div id="app-container">
+
+        <!-- HOME -->
+        <section id="view-home" class="view-section active">
+            <div class="clock-container">
+                <div class="clock-time" id="clock">00:00<span class="clock-seconds">00</span></div>
+                <div class="clock-date" id="date-str">Loading...</div>
+            </div>
+
+            <div class="days-container">
+                <div class="days-val" id="days-count">0</div>
+                <div class="days-lbl">DAYS TOGETHER</div>
+            </div>
+
+            <!-- Countdown (Hidden by default) -->
+            <div id="countdown-widget" class="glass-card countdown-widget">
+                <div style="display:flex; justify-content:space-between;">
+                    <strong style="color:var(--neon-blue);">NEXT DATE</strong>
+                    <span id="next-title" style="opacity:0.7;">Date Night</span>
+                </div>
+                <div class="cd-grid">
+                    <div>
+                        <div class="cd-num" id="cd-d">0</div>
+                        <div class="cd-lbl">Days</div>
+                    </div>
+                    <div>
+                        <div class="cd-num" id="cd-h">0</div>
+                        <div class="cd-lbl">Hrs</div>
+                    </div>
+                    <div>
+                        <div class="cd-num" id="cd-m">0</div>
+                        <div class="cd-lbl">Min</div>
+                    </div>
+                    <div>
+                        <div class="cd-num" id="cd-s">0</div>
+                        <div class="cd-lbl">Sec</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="photo-widget">
+                <img id="home-photo" class="photo-img" src="">
+                <div class="photo-actions">
+                    <div class="action-btn" onclick="document.getElementById('uploader').click()">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                </div>
+                <!-- Compress & Upload Input -->
+                <input type="file" id="uploader" accept="image/*" style="display:none;" onchange="handleUpload(this)">
+            </div>
+
+            <div style="height: 100px;"></div>
+        </section>
+
+        <!-- DATES -->
+        <section id="view-dates" class="view-section">
+            <div class="main-title" style="font-size:2.5rem;">Our Plan</div>
+            <div id="dates-list"></div>
+            <button class="btn-primary" onclick="document.getElementById('modal-date').style.display='flex'">+ New
+                Date</button>
+        </section>
+
+        <!-- MEMORIES -->
+        <section id="view-memories" class="view-section">
+            <div class="main-title" style="font-size:2.5rem;">Memories</div>
+            <div id="memories-list" style="display:grid; gap:15px;"></div>
+        </section>
+
+        <!-- CHAT -->
+        <section id="view-chat" class="view-section">
+            <div class="main-title" style="font-size:2.5rem;">Secrets</div>
+            <div id="chat-box" style="padding-bottom:80px;"></div>
+            <div style="position:fixed; bottom:110px; left:20px; right:20px; display:flex; gap:10px;">
+                <input type="text" id="chat-in" placeholder="Whisper..." style="margin:0; flex:1;">
+                <button onclick="sendMsg()"
+                    style="width:50px; background:var(--neon-blue); border:0; border-radius:12px; color:#000;"><i
+                        class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </section>
+
+        <!-- ADMIN -->
+        <section id="view-admin" class="view-section">
+            <div class="main-title" style="font-size:2.5rem;">Settings</div>
+            <button class="btn-primary" onclick="downloadBackup()">Download Backup</button>
+            <button class="btn-primary" style="background:#222; color:#f00;" onclick="logout()">Logout</button>
+        </section>
+
+    </div>
+
+    <!-- NAV -->
+    <nav id="bottom-nav">
+        <div class="nav-pill">
+            <i class="fa-solid fa-house nav-icon active" onclick="go('home')"></i>
+            <i class="fa-solid fa-calendar nav-icon" onclick="go('dates')"></i>
+            <i class="fa-solid fa-heart nav-icon" onclick="go('memories')"></i>
+            <i class="fa-solid fa-comments nav-icon" onclick="go('chat')"></i>
+            <i class="fa-solid fa-crown nav-icon" onclick="go('admin')"></i>
+        </div>
+    </nav>
+
+    <!-- MODAL -->
+    <div id="modal-date"
+        style="position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:20000; display:none; align-items:center; justify-content:center;">
+        <div class="glass-card" style="width:85%;">
+            <h2>New Date</h2>
+            <input type="text" id="nd-title" placeholder="Title">
+            <input type="datetime-local" id="nd-time">
+            <button class="btn-primary" onclick="addDate()">Save</button>
+            <button class="btn-primary" style="background:transparent; border:1px solid #444;"
+                onclick="document.getElementById('modal-date').style.display='none'">Cancel</button>
+        </div>
     </div>
 
     <script>
-        let current = 1;
-        const total = 4;
-        const duration = 7000;
-        let timerInt, mainInt;
+        // --- LOGIC CORE ---
+        const DB = {
+            data: JSON.parse(localStorage.getItem('k_db_final')) || {
+                msgs: [],
+                photos: ["https://images.unsplash.com/photo-1518199266791-5375a83190b7"],
+                dates: [],
+                memories: []
+            },
+            save: () => localStorage.setItem('k_db_final', JSON.stringify(DB.data))
+        };
+        let myRole = '';
 
-        function updateVH() {
-            let vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        // --- AUTH ---
+        function preLogin(role) {
+            const p = document.getElementById('pin');
+            p.style.display = 'block'; p.focus();
+            p.onkeyup = () => {
+                if (p.value.length >= 3) {
+                    if ((role == 'david' && p.value == '777') || (role == 'avia' && p.value == '111')) login(role);
+                    else { alert('Wrong Code'); p.value = ''; }
+                }
+            };
         }
+        function login(role) {
+            myRole = role;
+            localStorage.setItem('k_role', role);
+            document.body.classList.add('role-' + role);
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('app-container').style.display = 'block';
+            document.getElementById('bottom-nav').style.display = 'flex';
+            init();
+        }
+        function logout() { localStorage.removeItem('k_role'); location.reload(); }
 
-        window.addEventListener('resize', updateVH);
-        updateVH();
-
+        // --- INIT ---
         function init() {
-            render(1);
-            startAuto();
-            createParticles();
+            // Clock & Hearts
+            updateClock(); setInterval(updateClock, 1000);
+            createFloatingHearts(); setInterval(createFloatingHearts, 2000); // Heart generator
 
-            // מניעת גלילה בטלפון
-            document.body.addEventListener('touchmove', function (e) {
-                if (!e.target.closest('.stage')) e.preventDefault();
-            }, { passive: false });
+            // Data
+            renderDays();
+            renderPhoto(); setInterval(renderPhoto, 10000);
+            renderDates();
+            renderChat();
+            renderMemories();
         }
 
-        function render(n) {
-            document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.bookmark').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.timer-fill').forEach(f => f.style.width = '0%');
+        // --- CLOCK ---
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').innerHTML = `${h}:${m}<span class="clock-seconds">${s}</span>`;
 
-            const s = document.getElementById(`s-${n}`);
-            const b = document.getElementById(`b-${n}`);
-            if (s) s.classList.add('active');
-            if (b) b.classList.add('active');
+            const opts = { weekday: 'short', month: 'long', day: 'numeric' };
+            document.getElementById('date-str').innerText = now.toLocaleDateString('en-US', opts);
 
-            current = n;
-            animateTimer(n);
+            updateCountdown();
         }
 
-        function animateTimer(n) {
-            const fill = document.getElementById(`f-${n}`);
-            let start = Date.now();
-            if (timerInt) clearInterval(timerInt);
-
-            timerInt = setInterval(() => {
-                let p = ((Date.now() - start) / duration) * 100;
-                if (p <= 100) { if (fill) fill.style.width = p + '%'; }
-                else { clearInterval(timerInt); }
-            }, 60);
+        // --- HEARTS ---
+        function createFloatingHearts() {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            heart.innerText = Math.random() > 0.5 ? '❤️' : '✨';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            heart.style.fontSize = (Math.random() * 15 + 10) + 'px';
+            document.getElementById('hearts-container').appendChild(heart);
+            setTimeout(() => heart.remove(), 20000);
         }
 
-        function startAuto() {
-            if (mainInt) clearInterval(mainInt);
-            mainInt = setInterval(() => {
-                let next = current + 1;
-                if (next > total) next = 1;
-                render(next);
-            }, duration);
+        // --- DAYS ---
+        function renderDays() {
+            const start = new Date('2025-04-20');
+            const diff = Math.floor((new Date() - start) / 86400000);
+            document.getElementById('days-count').innerText = Math.max(0, diff);
         }
 
-        function jumpTo(n) {
-            render(n);
-            startAuto();
+        // --- PHOTOS (COMPRESSION) ---
+        function handleUpload(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        // Resize to max 800px width
+                        const scale = 800 / img.width;
+                        canvas.width = 800;
+                        canvas.height = img.height * scale;
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        // Compress to JPEG 0.7
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                        DB.data.photos.push(dataUrl);
+                        DB.save();
+                        renderPhoto();
+                        alert('Photo Added!');
+                    }
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+        function renderPhoto() {
+            const arr = DB.data.photos;
+            if (arr.length) document.getElementById('home-photo').src = arr[Math.floor(Math.random() * arr.length)];
         }
 
-        function blastKiss() {
-            const box = document.getElementById('kissBox');
-            box.style.display = 'flex';
-            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-            for (let i = 0; i < 40; i++) { setTimeout(createExplodingHeart, i * 25); }
-            setTimeout(() => { box.style.display = 'none'; }, 1500);
+        // --- DATES ---
+        function addDate() {
+            const t = document.getElementById('nd-title').value;
+            const tm = document.getElementById('nd-time').value;
+            if (t && tm) {
+                DB.data.dates.push({ id: Date.now(), title: t, time: tm });
+                DB.data.dates.sort((a, b) => new Date(a.time) - new Date(b.time));
+                DB.save();
+                document.getElementById('modal-date').style.display = 'none';
+                renderDates();
+            }
+        }
+        function renderDates() {
+            const list = document.getElementById('dates-list');
+            list.innerHTML = DB.data.dates.map(d => `
+                <div class="glass-card" style="padding:15px; display:flex; justify-content:space-between;">
+                    <div><b>${d.title}</b><br><small style="opacity:0.6">${new Date(d.time).toLocaleString()}</small></div>
+                    <div onclick="delDate(${d.id})">🗑️</div>
+                </div>
+            `).join('');
+            updateCountdown();
+        }
+        function delDate(id) {
+            if (confirm('Delete?')) {
+                DB.data.dates = DB.data.dates.filter(d => d.id !== id);
+                DB.save();
+                renderDates();
+            }
+        }
+        function updateCountdown() {
+            const now = new Date();
+            const next = DB.data.dates.find(d => new Date(d.time) > now);
+            const w = document.getElementById('countdown-widget');
+
+            if (next) {
+                w.style.display = 'block';
+                document.getElementById('next-title').innerText = next.title;
+                const diff = new Date(next.time) - now;
+                document.getElementById('cd-d').innerText = Math.floor(diff / 86400000);
+                document.getElementById('cd-h').innerText = Math.floor((diff % 86400000) / 3600000);
+                document.getElementById('cd-m').innerText = Math.floor((diff % 3600000) / 60000);
+                document.getElementById('cd-s').innerText = Math.floor((diff % 60000) / 1000);
+            } else {
+                w.style.display = 'none';
+            }
         }
 
-        function createExplodingHeart() {
-            const h = document.createElement('div');
-            h.innerHTML = Math.random() > 0.5 ? '❤️' : '💋';
-            h.style.position = 'fixed';
-            h.style.left = '50%'; h.style.top = '50%';
-            h.style.fontSize = Math.random() * 40 + 20 + 'px';
-            h.style.zIndex = '1100';
-            h.style.pointerEvents = 'none';
-            const deg = Math.random() * 360;
-            const dist = Math.random() * 400 + 100;
-            const x = Math.cos(deg * Math.PI / 180) * dist;
-            const y = Math.sin(deg * Math.PI / 180) * dist;
-            document.body.appendChild(h);
-            h.animate([
-                { transform: 'translate(-50%, -50%) scale(0) rotate(0deg)', opacity: 1 },
-                { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(1.5) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-            ], { duration: 1200, easing: 'ease-out' }).onfinish = () => h.remove();
+        // --- CHAT & NAV ---
+        function sendMsg() {
+            const tx = document.getElementById('chat-in').value;
+            if (tx) {
+                DB.data.msgs.push({ u: myRole, t: tx });
+                DB.save();
+                document.getElementById('chat-in').value = '';
+                renderChat();
+            }
+        }
+        function renderChat() {
+            const b = document.getElementById('chat-box');
+            b.innerHTML = DB.data.msgs.map(m => `
+                <div style="text-align:${m.u === myRole ? 'right' : 'left'}; margin:10px 0;">
+                    <span style="background:${m.u === myRole ? 'var(--neon-blue)' : '#222'}; color:${m.u === myRole ? '#000' : '#fff'}; padding:10px 15px; border-radius:15px; display:inline-block;">
+                        ${m.t}
+                    </span>
+                </div>
+            `).join('');
+            b.scrollTop = b.scrollHeight;
         }
 
-        function createParticles() {
-            const container = document.getElementById('particles-container');
-            setInterval(() => {
-                const p = document.createElement('div');
-                p.style.position = 'absolute';
-                p.style.bottom = '-30px';
-                p.style.left = Math.random() * 100 + 'vw';
-                p.style.fontSize = Math.random() * 18 + 8 + 'px';
-                p.style.opacity = Math.random() * 0.4;
-                p.innerHTML = Math.random() > 0.8 ? '✨' : '💖';
-                p.style.pointerEvents = 'none';
-                container.appendChild(p);
-                p.animate([
-                    { transform: 'translateY(0) rotate(0deg)', opacity: p.style.opacity },
-                    { transform: `translateY(-110vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-                ], { duration: Math.random() * 4000 + 8000, easing: 'linear' }).onfinish = () => p.remove();
-            }, 800);
+        function go(tab) {
+            document.querySelectorAll('.view-section').forEach(e => e.style.display = 'none');
+            document.getElementById('view-' + tab).style.display = 'block';
+            document.querySelectorAll('.nav-icon').forEach(e => e.classList.remove('active'));
+            const idx = ['home', 'dates', 'memories', 'chat', 'admin'].indexOf(tab);
+            document.querySelectorAll('.nav-icon')[idx].classList.add('active');
         }
 
-        init();
+        // --- MEMORIES ---
+        function renderMemories() {
+            // Placeholder logic for memories tab
+            const d = document.getElementById('memories-list');
+            if (DB.data.memories.length === 0) d.innerHTML = '<div style="text-align:center; opacity:0.5; padding:50px;">No memories saved yet.</div>';
+        }
+
+        function downloadBackup() {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([JSON.stringify(DB.data)], { type: 'application/json' }));
+            a.download = 'kingdom_backup.json';
+            a.click();
+        }
+
+        // Auto Login
+        const r = localStorage.getItem('k_role');
+        if (r) login(r);
+
     </script>
 </body>
 
