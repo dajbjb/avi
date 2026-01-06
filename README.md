@@ -12,12 +12,10 @@
     <style>
         :root {
             --primary: #ff4d6d;
-            --deep-rose: #c9184a;
             --rose-gold: #ffb3c1;
-            --wine: #590d22;
-            --glass: rgba(255, 255, 255, 0.15);
-            --glass-border: rgba(255, 255, 255, 0.3);
-            --shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            --glass: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
         }
 
         * {
@@ -32,12 +30,15 @@
             width: 100%;
             height: 100%;
             font-family: 'Assistant', sans-serif;
-            background: #0a0a0a;
+            background: #050505;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
+            /* מונע מתיחה וגלילה על טלפונים */
+            position: fixed;
+            touch-action: none;
         }
 
         /* רקע דינמי יוקרתי */
@@ -48,27 +49,26 @@
             width: 100%;
             height: 100%;
             z-index: -2;
-            background: radial-gradient(circle at 20% 30%, #590d22 0%, #0a0a0a 100%);
-            overflow: hidden;
+            background: radial-gradient(circle at center, #2e0814 0%, #050505 100%);
         }
 
         .bg-glow {
             position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(255, 77, 109, 0.15) 0%, transparent 70%);
+            width: 150vw;
+            height: 150vw;
+            background: radial-gradient(circle, rgba(255, 77, 109, 0.12) 0%, transparent 70%);
             border-radius: 50%;
             filter: blur(80px);
-            animation: moveGlow 20s infinite alternate;
+            animation: moveGlow 25s infinite alternate ease-in-out;
         }
 
         @keyframes moveGlow {
             0% {
-                transform: translate(-10%, -10%);
+                transform: translate(-30%, -30%);
             }
 
             100% {
-                transform: translate(50%, 50%);
+                transform: translate(10%, 10%);
             }
         }
 
@@ -82,38 +82,39 @@
             pointer-events: none;
         }
 
-        /* סימניות מודרניות - Floating Pills */
+        /* סימניות מודרניות - אופטימיזציה לנייד */
         .bookmarks {
             position: fixed;
-            bottom: 40px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 15px;
+            gap: 12px;
             z-index: 100;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 12px 20px;
             border-radius: 50px;
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
         }
 
         .bookmark {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
-            transition: 0.4s all cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: 0.5s all cubic-bezier(0.2, 0.8, 0.2, 1.2);
             cursor: pointer;
         }
 
         .bookmark.active {
-            width: 40px;
+            width: 35px;
             background: var(--primary);
             box-shadow: 0 0 15px var(--primary);
         }
 
-        /* קונטיינר שלבים */
+        /* קונטיינר שלבים - מותאם למסך טלפון */
         .viewport {
             width: 100%;
             height: 100%;
@@ -121,23 +122,24 @@
             align-items: center;
             justify-content: center;
             perspective: 2000px;
+            padding: 20px;
         }
 
         .stage {
             position: absolute;
-            width: 90%;
-            max-width: 500px;
+            width: calc(100% - 40px);
+            max-width: 420px;
             background: var(--glass);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-radius: 40px;
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
+            border-radius: 35px;
             border: 1px solid var(--glass-border);
-            padding: 50px 30px;
+            padding: 40px 25px;
             text-align: center;
             opacity: 0;
             visibility: hidden;
-            transform: scale(0.8) translateY(50px) rotateX(-20deg);
-            transition: 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform: scale(0.85) translateY(40px) rotateX(-15deg);
+            transition: 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
             box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
@@ -153,185 +155,158 @@
 
         h1 {
             font-family: 'Amatic SC', cursive;
-            font-size: 4.5rem;
-            margin: 0;
+            font-size: 3.5rem;
+            margin: 5px 0;
             background: linear-gradient(to bottom, #fff, var(--rose-gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
-            line-height: 1;
+            line-height: 1.1;
         }
 
         .subtitle {
-            font-size: 1.1rem;
-            letter-spacing: 3px;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
             text-transform: uppercase;
             color: var(--rose-gold);
-            font-weight: 300;
-            margin-bottom: 20px;
+            font-weight: 400;
+            margin-bottom: 10px;
             opacity: 0.8;
         }
 
         p {
-            font-size: 1.3rem;
-            line-height: 1.6;
-            font-weight: 200;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            font-weight: 300;
             color: rgba(255, 255, 255, 0.9);
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
-        /* רכיבים ויזואליים משוכללים */
+        /* רכיבים ויזואליים - מותאם לנייד */
         .heart-orb {
             position: relative;
-            width: 180px;
-            height: 180px;
+            width: 140px;
+            height: 140px;
             background: radial-gradient(circle at 30% 30%, rgba(255, 77, 109, 0.8), transparent);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 60px rgba(255, 77, 109, 0.3), inset 0 0 30px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 50px rgba(255, 77, 109, 0.25);
             animation: pulseOrb 4s infinite ease-in-out;
-            margin: 30px 0;
+            margin: 20px 0;
         }
 
         @keyframes pulseOrb {
 
             0%,
             100% {
-                transform: scale(1) rotate(0deg);
-                box-shadow: 0 0 40px rgba(255, 77, 109, 0.2);
+                transform: scale(1);
+                box-shadow: 0 0 30px rgba(255, 77, 109, 0.2);
             }
 
             50% {
-                transform: scale(1.05) rotate(5deg);
-                box-shadow: 0 0 80px rgba(255, 77, 109, 0.5);
+                transform: scale(1.05);
+                box-shadow: 0 0 60px rgba(255, 77, 109, 0.4);
             }
         }
 
         .heart-icon {
-            font-size: 80px;
-            filter: drop-shadow(0 0 20px white);
+            font-size: 65px;
+            filter: drop-shadow(0 0 15px white);
         }
 
-        /* כרטיסיות פיצ'רים */
+        /* כרטיסיות פיצ'רים - מותאם לנייד */
         .feature-box {
             width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 18px;
+            padding: 15px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             text-align: right;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: 0.3s;
-        }
-
-        .feature-box:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(-10px);
         }
 
         .feature-icon {
-            font-size: 2rem;
-            min-width: 50px;
+            font-size: 1.6rem;
+            min-width: 40px;
             text-align: center;
+        }
+
+        .feature-box div b {
+            display: block;
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+
+        .feature-box div span {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            display: block;
         }
 
         /* מתנה יוקרתית */
         .luxury-gift {
-            font-size: 100px;
+            font-size: 90px;
             cursor: pointer;
             position: relative;
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 15px;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.4, 1.4);
         }
 
-        .luxury-gift:hover {
-            transform: scale(1.1) rotate(10deg);
-            filter: brightness(1.2);
+        .luxury-gift:active {
+            transform: scale(0.9) rotate(-5deg);
         }
 
-        .luxury-gift::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 150%;
-            height: 150%;
-            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
-            z-index: -1;
-            opacity: 0.3;
-            animation: glowPulse 2s infinite;
-        }
-
-        @keyframes glowPulse {
-
-            0%,
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 0.2;
-            }
-
-            50% {
-                transform: translate(-50%, -50%) scale(1.3);
-                opacity: 0.4;
-            }
-        }
-
-        /* לוגיקת נשיקה */
+        /* לוגיקת נשיקה - מילוי מסך מלא */
         .the-kiss {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             z-index: 1000;
             display: none;
             align-items: center;
             justify-content: center;
+            pointer-events: none;
         }
 
         .kiss-big {
-            font-size: 300px;
-            animation: kissImpact 1.5s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 200px;
+            animation: kissImpact 1.5s forwards ease-out;
         }
 
         @keyframes kissImpact {
             0% {
                 transform: scale(0) rotate(-45deg);
                 opacity: 0;
-                filter: blur(20px);
             }
 
-            40% {
-                transform: scale(1.2) rotate(0);
-                opacity: 1;
-                filter: blur(0);
-            }
-
-            70% {
-                transform: scale(1);
+            30% {
+                transform: scale(1.3) rotate(0);
                 opacity: 1;
             }
 
             100% {
-                transform: scale(5);
+                transform: scale(6);
                 opacity: 0;
             }
         }
 
-        /* פס טעינה דק ויוקרתי */
+        /* פס טעינה - מותאם לנייד */
         .timer-track {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 4px;
+            height: 3px;
             background: rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            border-radius: 35px 35px 0 0;
         }
 
         .timer-fill {
@@ -339,6 +314,26 @@
             width: 0%;
             background: var(--primary);
             box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* הסתרת אלמנטים מיותרים בטלפון */
+        @media (max-height: 600px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+
+            .heart-orb {
+                width: 100px;
+                height: 100px;
+            }
+
+            .heart-icon {
+                font-size: 45px;
+            }
+
+            .stage {
+                padding: 30px 20px;
+            }
         }
     </style>
 </head>
@@ -370,7 +365,7 @@
             <div class="heart-orb">
                 <div class="heart-icon">❤️</div>
             </div>
-            <p>שני עולמות שנפגשו והפכו לאחד.</p>
+            <p>שני עולמות שנפגשו<br>והפכו לאחד מופלא.</p>
         </div>
 
         <!-- שלב 2: השקה -->
@@ -379,14 +374,25 @@
                 <div class="timer-fill" id="f-2"></div>
             </div>
             <div class="subtitle">Coming Soon</div>
-            <h1 style="font-size: 3.5rem;">ממלכת האהבה</h1>
-            <p>אפליקציה שנועדה רק בשבילנו דוד ואביה.<br>השקה ושימוש בקרוב מאוד... 🥹</p>
+            <h1>ממלכת האהבה</h1>
+            <p>אפליקציה שנועדה רק בשבילנו.<br>השקה בקרוב מאוד... 🥹</p>
             <div
-                style="margin-top: 30px; width: 100%; height: 2px; background: rgba(255,255,255,0.1); position: relative;">
+                style="margin-top: 25px; width: 100%; height: 2px; background: rgba(255,255,255,0.1); position: relative;">
                 <div
-                    style="position: absolute; left: 0; top: 0; height: 100%; width: 60%; background: var(--primary); box-shadow: 0 0 15px var(--primary); animation: loadPulse 2s infinite;">
+                    style="position: absolute; left: 0; top: 0; height: 100%; width: 100%; background: linear-gradient(90deg, transparent, var(--primary), transparent); animation: loadPulse 2.5s infinite linear;">
                 </div>
             </div>
+            <style>
+                @keyframes loadPulse {
+                    0% {
+                        transform: translateX(-100%);
+                    }
+
+                    100% {
+                        transform: translateX(100%);
+                    }
+                }
+            </style>
         </div>
 
         <!-- שלב 3: פיצ'רים -->
@@ -395,29 +401,29 @@
                 <div class="timer-fill" id="f-3"></div>
             </div>
             <div class="subtitle">Inside the App</div>
-            <h1 style="font-size: 3rem; margin-bottom: 20px;">מה מחכה בפנים?</h1>
+            <h1 style="font-size: 2.8rem; margin-bottom: 15px;">מה מחכה לנו?</h1>
 
             <div class="feature-box">
                 <div class="feature-icon">💬</div>
                 <div>
-                    <div style="font-weight: 700; font-size: 1.1rem;">רגעים בשידור חי</div>
-                    <div style="opacity: 0.6; font-size: 0.9rem;">צ'אט פרטי שסופר כל רגע ביחד.</div>
-                </div>
-            </div>
-
-            <div class="feature-box">
-                <div class="feature-icon">💎</div>
-                <div>
-                    <div style="font-weight: 700; font-size: 1.1rem;">עיצוב אישי</div>
-                    <div style="opacity: 0.6; font-size: 0.9rem;">חוויה יוקרתית שמותאמת רק לכם.</div>
+                    <b>רגעים בשידור חי</b>
+                    <span>צ'אט פרטי ואישי רק לנו.</span>
                 </div>
             </div>
 
             <div class="feature-box">
                 <div class="feature-icon">⏳</div>
                 <div>
-                    <div style="font-weight: 700; font-size: 1.1rem;">ציר זמן נצחי</div>
-                    <div style="opacity: 0.6; font-size: 0.9rem;">כל הזיכרונות במקום אחד.</div>
+                    <b>ציר זמן נצחי</b>
+                    <span>כל הזיכרונות במקום אחד.</span>
+                </div>
+            </div>
+
+            <div class="feature-box">
+                <div class="feature-icon">🎁</div>
+                <div>
+                    <b>הפתעות יומיות</b>
+                    <span>מסרים ופינוקים בכל יום.</span>
                 </div>
             </div>
         </div>
@@ -429,7 +435,7 @@
             </div>
             <div class="subtitle">For You</div>
             <h1>משהו קטן...</h1>
-            <p>לחצי כדי לגלות מה מחכה לך בתיבה</p>
+            <p>לחצי כדי לגלות מה מחכה לך</p>
             <div class="luxury-gift" onclick="blastKiss()">🎁</div>
         </div>
 
@@ -443,13 +449,18 @@
     <script>
         let current = 1;
         const total = 4;
-        const duration = 7000;
+        const duration = 6500;
         let timerInt, mainInt;
 
         function init() {
             render(1);
             startAuto();
             createParticles();
+
+            // מניעת גלילה בטלפון
+            document.body.addEventListener('touchmove', function (e) {
+                e.preventDefault();
+            }, { passive: false });
         }
 
         function render(n) {
@@ -459,8 +470,8 @@
 
             const s = document.getElementById(`s-${n}`);
             const b = document.getElementById(`b-${n}`);
-            s.classList.add('active');
-            b.classList.add('active');
+            if (s) s.classList.add('active');
+            if (b) b.classList.add('active');
 
             current = n;
             animateTimer(n);
@@ -473,9 +484,12 @@
 
             timerInt = setInterval(() => {
                 let p = ((Date.now() - start) / duration) * 100;
-                if (p <= 100) fill.style.width = p + '%';
-                else clearInterval(timerInt);
-            }, 50);
+                if (p <= 100) {
+                    if (fill) fill.style.width = p + '%';
+                } else {
+                    clearInterval(timerInt);
+                }
+            }, 60).unref?.[60] || null; // Avoid unref error if not in node
         }
 
         function startAuto() {
@@ -496,8 +510,11 @@
             const box = document.getElementById('kissBox');
             box.style.display = 'flex';
 
-            for (let i = 0; i < 40; i++) {
-                setTimeout(createExplodingHeart, i * 20);
+            // הפעלת רטט בטלפון אם נתמך
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+
+            for (let i = 0; i < 35; i++) {
+                setTimeout(createExplodingHeart, i * 25);
             }
 
             setTimeout(() => {
@@ -510,11 +527,12 @@
             h.innerHTML = Math.random() > 0.5 ? '❤️' : '💋';
             h.style.position = 'fixed';
             h.style.left = '50%'; h.style.top = '50%';
-            h.style.fontSize = Math.random() * 40 + 20 + 'px';
+            h.style.fontSize = Math.random() * 35 + 20 + 'px';
             h.style.zIndex = '1100';
+            h.style.pointerEvents = 'none';
 
             const deg = Math.random() * 360;
-            const dist = Math.random() * 400 + 100;
+            const dist = Math.random() * 350 + 100;
             const x = Math.cos(deg * Math.PI / 180) * dist;
             const y = Math.sin(deg * Math.PI / 180) * dist;
 
@@ -522,9 +540,9 @@
 
             h.animate([
                 { transform: 'translate(-50%, -50%) scale(0) rotate(0deg)', opacity: 1 },
-                { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(1.5) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(1.4) rotate(${Math.random() * 360}deg)`, opacity: 0 }
             ], {
-                duration: 1200, easing: 'ease-out'
+                duration: 1000, easing: 'ease-out'
             }).onfinish = () => h.remove();
         }
 
@@ -533,21 +551,22 @@
             setInterval(() => {
                 const p = document.createElement('div');
                 p.style.position = 'absolute';
-                p.style.bottom = '-20px';
+                p.style.bottom = '-30px';
                 p.style.left = Math.random() * 100 + 'vw';
-                p.style.fontSize = Math.random() * 20 + 10 + 'px';
-                p.style.opacity = Math.random() * 0.5;
+                p.style.fontSize = Math.random() * 18 + 8 + 'px';
+                p.style.opacity = Math.random() * 0.4;
                 p.innerHTML = Math.random() > 0.8 ? '✨' : '💖';
+                p.style.pointerEvents = 'none';
                 container.appendChild(p);
 
                 p.animate([
                     { transform: 'translateY(0) rotate(0deg)', opacity: p.style.opacity },
                     { transform: `translateY(-110vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
                 ], {
-                    duration: Math.random() * 5000 + 10000,
+                    duration: Math.random() * 4000 + 8000,
                     easing: 'linear'
                 }).onfinish = () => p.remove();
-            }, 800);
+            }, 1000); // Frequency reduced for mobile performance
         }
 
         init();
