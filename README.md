@@ -574,10 +574,16 @@
             document.getElementById('days-count').innerText = Math.max(0, diff);
         }
 
-        // --- PHOTOS (COMPRESSION) ---
+        // --- PHOTOS (COMPRESSION & ERROR HANDLING) ---
         function handleUpload(input) {
             if (input.files && input.files[0]) {
                 const file = input.files[0];
+
+                // Feedback UI
+                const btn = document.querySelector('.action-btn');
+                const originalIcon = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const img = new Image();
@@ -585,17 +591,46 @@
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
-                        // Resize to max 800px width
-                        const scale = 800 / img.width;
-                        canvas.width = 800;
-                        canvas.height = img.height * scale;
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        // Compress to JPEG 0.7
-                        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-                        DB.data.photos.push(dataUrl);
-                        DB.save();
-                        renderPhoto();
-                        alert('Photo Added!');
+
+                        // Aggressive compression: Max 600px
+                        const maxWidth = 600;
+                        let w = img.width;
+                        let h = img.height;
+
+                        if (w > maxWidth) {
+                            h = Math.round(h * (maxWidth / w));
+                            w = maxWidth;
+                        }
+
+                        canvas.width = w;
+                        canvas.height = h;
+                        ctx.drawImage(img, 0, 0, w, h);
+
+                        // JPEG quality 0.6 (Good balance)
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+
+                        try {
+                            // Validate storage before pushing
+                            if (JSON.stringify(DB.data).length + dataUrl.length > 4500000) {
+                                throw new Error('Storage Full');
+                            }
+
+                            DB.data.photos.push(dataUrl);
+                            DB.save();
+                            renderPhoto();
+                            // Show the new photo immediately
+                            document.getElementById('home-photo').src = dataUrl;
+                            alert('Memory Secured! 📸');
+                        } catch (err) {
+                            if (err.message === 'Storage Full' || err.name === 'QuotaExceededError') {
+                                alert('⚠️ Memory Full!\nBrowser storage is limited. Please delete old memories or download a backup.');
+                            } else {
+                                alert('Error saving photo: ' + err.message);
+                            }
+                        } finally {
+                            btn.innerHTML = originalIcon;
+                            input.value = ''; // Reset input
+                        }
                     }
                 }
                 reader.readAsDataURL(file);
